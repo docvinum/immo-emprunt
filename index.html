@@ -1,0 +1,757 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="description"
+        content="Simulateur gratuit de capacité d'emprunt immobilier. Estimez votre budget d'achat à partir de vos revenus, seul ou à deux.">
+
+  <meta name="theme-color" content="#f7f8fa">
+
+  <title>Combien puis-je emprunter ? | Simulateur immobilier</title>
+
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- EN-TÊTE -->
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">⌂</span>
+        <span>Mon Budget Immo</span>
+      </div>
+
+      <span class="header-tag">Simulation gratuite</span>
+    </header>
+
+    <main>
+
+      <!-- INTRODUCTION -->
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">SIMULATEUR IMMOBILIER</p>
+
+        <h1 id="page-title">Combien puis-je emprunter ?</h1>
+
+        <p class="hero-description">
+          Découvrez votre capacité d'emprunt pour une résidence
+          principale, à partir de vos revenus.
+          Ajustez les paramètres et visualisez immédiatement
+          votre budget immobilier.
+        </p>
+      </section>
+
+      <!-- RÉSULTATS PRINCIPAUX -->
+      <section class="results-overview"
+               aria-label="Résultats principaux"
+               aria-live="polite"
+               aria-atomic="true">
+
+        <article class="result-card result-primary">
+          <span class="result-label">
+            Capital maximal empruntable
+          </span>
+
+          <strong class="result-value" id="capital-result">
+            0 €
+          </strong>
+
+          <span class="result-caption" id="capital-caption">
+            Sur 20 ans
+          </span>
+        </article>
+
+        <article class="result-card">
+          <span class="result-label">
+            Prix maximal du bien
+          </span>
+
+          <strong class="result-value" id="property-result">
+            0 €
+          </strong>
+
+          <span class="result-caption">
+            Hors frais d'acquisition
+          </span>
+        </article>
+
+        <article class="result-card">
+          <span class="result-label">
+            Mensualité maximale
+          </span>
+
+          <strong class="result-value" id="monthly-result">
+            0 €
+          </strong>
+
+          <span class="result-caption">
+            Assurance comprise
+          </span>
+        </article>
+
+      </section>
+
+      <div class="content-layout">
+
+        <!-- PARAMÈTRES -->
+        <div class="settings-column">
+
+          <!-- REVENUS -->
+          <section class="panel" aria-labelledby="income-title">
+
+            <div class="panel-heading">
+              <div>
+                <span class="section-number">01</span>
+                <h2 id="income-title">Vos revenus</h2>
+              </div>
+              <p>
+                Renseignez vos salaires bruts annuels.
+              </p>
+            </div>
+
+            <div class="borrower-block">
+
+              <h3>Emprunteur principal</h3>
+
+              <div class="field">
+                <label for="salary1">
+                  Salaire brut annuel
+                </label>
+
+                <div class="input-with-unit">
+                  <input
+                    type="number"
+                    id="salary1"
+                    min="0"
+                    max="1000000"
+                    step="2500"
+                    value="75000"
+                    inputmode="numeric">
+                  <span>€</span>
+                </div>
+
+                <input
+                  type="range"
+                  id="salary1-range"
+                  min="0"
+                  max="200000"
+                  step="2500"
+                  value="75000"
+                  aria-label="Salaire brut annuel du premier emprunteur">
+              </div>
+
+              <fieldset class="field">
+                <legend>Statut professionnel</legend>
+
+                <div class="segmented-control">
+                  <label>
+                    <input type="radio"
+                           name="status1"
+                           value="cadre"
+                           checked>
+                    <span>Cadre</span>
+                  </label>
+
+                  <label>
+                    <input type="radio"
+                           name="status1"
+                           value="noncadre">
+                    <span>Non-cadre</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <div class="inline-result">
+                <span>Net mensuel estimé</span>
+                <strong id="net1-result">0 €</strong>
+              </div>
+
+            </div>
+
+            <!-- CO-EMPRUNTEUR -->
+            <div class="co-borrower-section">
+
+              <label class="toggle-row" for="co-borrower">
+                <span>
+                  <strong>Ajouter un co-emprunteur</strong>
+                  <small>Calculer avec deux revenus</small>
+                </span>
+
+                <span class="switch">
+                  <input type="checkbox"
+                         id="co-borrower"
+                         checked>
+                  <span class="switch-track"></span>
+                </span>
+              </label>
+
+              <div id="co-borrower-fields" class="borrower-block">
+
+                <h3>Co-emprunteur</h3>
+
+                <div class="field">
+                  <label for="salary2">
+                    Salaire brut annuel
+                  </label>
+
+                  <div class="input-with-unit">
+                    <input
+                      type="number"
+                      id="salary2"
+                      min="0"
+                      max="1000000"
+                      step="2500"
+                      value="50000"
+                      inputmode="numeric">
+                    <span>€</span>
+                  </div>
+
+                  <input
+                    type="range"
+                    id="salary2-range"
+                    min="0"
+                    max="200000"
+                    step="2500"
+                    value="50000"
+                    aria-label="Salaire brut annuel du co-emprunteur">
+                </div>
+
+                <fieldset class="field">
+                  <legend>Statut professionnel</legend>
+
+                  <div class="segmented-control">
+                    <label>
+                      <input type="radio"
+                             name="status2"
+                             value="cadre"
+                             checked>
+                      <span>Cadre</span>
+                    </label>
+
+                    <label>
+                      <input type="radio"
+                             name="status2"
+                             value="noncadre">
+                      <span>Non-cadre</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="inline-result">
+                  <span>Net mensuel estimé</span>
+                  <strong id="net2-result">0 €</strong>
+                </div>
+
+              </div>
+            </div>
+
+            <details class="advanced-settings">
+              <summary>
+                Ajuster les revenus nets réels
+              </summary>
+
+              <p class="help-text">
+                Par défaut, le net avant impôt est estimé
+                à 76 % du brut pour un cadre et 78 %
+                pour un non-cadre.
+                Vous pouvez remplacer cette estimation
+                par votre net mensuel réel.
+              </p>
+
+              <div class="field">
+                <label for="net1-override">
+                  Net mensuel réel, emprunteur principal
+                </label>
+                <div class="input-with-unit">
+                  <input type="number"
+                         id="net1-override"
+                         min="0"
+                         step="50"
+                         placeholder="Estimation automatique">
+                  <span>€</span>
+                </div>
+              </div>
+
+              <div class="field" id="net2-override-field">
+                <label for="net2-override">
+                  Net mensuel réel, co-emprunteur
+                </label>
+                <div class="input-with-unit">
+                  <input type="number"
+                         id="net2-override"
+                         min="0"
+                         step="50"
+                         placeholder="Estimation automatique">
+                  <span>€</span>
+                </div>
+              </div>
+            </details>
+
+          </section>
+
+          <!-- PARAMÈTRES DU CRÉDIT -->
+          <section class="panel" aria-labelledby="loan-title">
+
+            <div class="panel-heading">
+              <div>
+                <span class="section-number">02</span>
+                <h2 id="loan-title">Votre crédit</h2>
+              </div>
+              <p>
+                Ajustez les conditions de financement.
+              </p>
+            </div>
+
+            <fieldset class="field">
+              <legend>Durée du prêt</legend>
+
+              <div class="segmented-control">
+                <label>
+                  <input type="radio"
+                         name="duration"
+                         value="15">
+                  <span>15 ans</span>
+                </label>
+
+                <label>
+                  <input type="radio"
+                         name="duration"
+                         value="20"
+                         checked>
+                  <span>20 ans</span>
+                </label>
+
+                <label>
+                  <input type="radio"
+                         name="duration"
+                         value="25">
+                  <span>25 ans</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="field-grid">
+
+              <div class="field">
+                <label for="interest-rate">
+                  Taux nominal annuel
+                </label>
+
+                <div class="input-with-unit">
+                  <input type="number"
+                         id="interest-rate"
+                         min="0"
+                         max="30"
+                         step="0.01"
+                         value="3.62">
+                  <span>%</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="insurance-rate">
+                  Assurance annuelle globale
+                </label>
+
+                <div class="input-with-unit">
+                  <input type="number"
+                         id="insurance-rate"
+                         min="0"
+                         max="10"
+                         step="0.01"
+                         value="0.20">
+                  <span>%</span>
+                </div>
+              </div>
+
+            </div>
+
+            <p class="help-text">
+              Les taux sont des hypothèses modifiables,
+              et non des offres bancaires en temps réel.
+              L'assurance est calculée sur le capital initial.
+            </p>
+
+            <details class="advanced-settings">
+              <summary>
+                Assurance par emprunteur
+              </summary>
+
+              <p class="help-text">
+                Activez ce mode pour calculer le coût
+                de l'assurance selon les taux et quotités
+                de chaque emprunteur.
+              </p>
+
+              <label class="checkbox-row">
+                <input type="checkbox" id="insurance-detailed">
+                Utiliser des taux et quotités individuels
+              </label>
+
+              <div id="insurance-details" hidden>
+
+                <h3>Emprunteur principal</h3>
+
+                <div class="field-grid">
+                  <div class="field">
+                    <label for="insurance1-rate">
+                      Taux annuel (%)
+                    </label>
+                    <input type="number"
+                           id="insurance1-rate"
+                           min="0"
+                           max="10"
+                           step="0.01"
+                           value="0.20">
+                  </div>
+
+                  <div class="field">
+                    <label for="insurance1-share">
+                      Quotité (%)
+                    </label>
+                    <input type="number"
+                           id="insurance1-share"
+                           min="0"
+                           max="100"
+                           step="5"
+                           value="100">
+                  </div>
+                </div>
+
+                <div id="insurance2-fields">
+                  <h3>Co-emprunteur</h3>
+
+                  <div class="field-grid">
+                    <div class="field">
+                      <label for="insurance2-rate">
+                        Taux annuel (%)
+                      </label>
+                      <input type="number"
+                             id="insurance2-rate"
+                             min="0"
+                             max="10"
+                             step="0.01"
+                             value="0.20">
+                    </div>
+
+                    <div class="field">
+                      <label for="insurance2-share">
+                        Quotité (%)
+                      </label>
+                      <input type="number"
+                             id="insurance2-share"
+                             min="0"
+                             max="100"
+                             step="5"
+                             value="100">
+                    </div>
+                  </div>
+                </div>
+
+                <p class="help-text" id="insurance-effective">
+                  Taux global effectif : 0,40 %
+                </p>
+              </div>
+            </details>
+
+            <fieldset class="field">
+              <legend>Taux d'endettement maximal</legend>
+
+              <div class="segmented-control">
+                <label>
+                  <input type="radio"
+                         name="debt-ratio"
+                         value="33">
+                  <span>33 %</span>
+                </label>
+
+                <label>
+                  <input type="radio"
+                         name="debt-ratio"
+                         value="35"
+                         checked>
+                  <span>35 %</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <label for="existing-loans">
+                Autres mensualités de crédits du foyer
+              </label>
+
+              <div class="input-with-unit">
+                <input type="number"
+                       id="existing-loans"
+                       min="0"
+                       step="50"
+                       value="0">
+                <span>€/mois</span>
+              </div>
+
+              <p class="help-text">
+                Incluez les crédits existants, assurance comprise.
+              </p>
+            </div>
+
+          </section>
+
+          <!-- ACQUISITION -->
+          <section class="panel" aria-labelledby="purchase-title">
+
+            <div class="panel-heading">
+              <div>
+                <span class="section-number">03</span>
+                <h2 id="purchase-title">Votre acquisition</h2>
+              </div>
+              <p>
+                Estimez votre budget d'achat.
+              </p>
+            </div>
+
+            <div class="field">
+              <label for="down-payment">
+                Apport personnel
+              </label>
+
+              <div class="input-with-unit">
+                <input type="number"
+                       id="down-payment"
+                       min="0"
+                       step="5000"
+                       value="50000">
+                <span>€</span>
+              </div>
+            </div>
+
+            <fieldset class="field">
+              <legend>Type de bien immobilier</legend>
+
+              <div class="segmented-control">
+                <label>
+                  <input type="radio"
+                         name="property-type"
+                         value="old"
+                         checked>
+                  <span>Ancien</span>
+                </label>
+
+                <label>
+                  <input type="radio"
+                         name="property-type"
+                         value="new">
+                  <span>Neuf</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <label for="purchase-fees">
+                Frais d'acquisition estimés
+              </label>
+
+              <div class="input-with-unit">
+                <input type="number"
+                       id="purchase-fees"
+                       min="0"
+                       max="30"
+                       step="0.1"
+                       value="8">
+                <span>%</span>
+              </div>
+            </div>
+
+          </section>
+
+        </div>
+
+        <!-- COLONNE DES RÉSULTATS -->
+        <aside class="summary-column"
+               aria-label="Synthèse financière">
+
+          <section class="panel summary-panel">
+
+            <div class="panel-heading">
+              <div>
+                <span class="section-number">04</span>
+                <h2>Votre financement</h2>
+              </div>
+            </div>
+
+            <div class="summary-highlight">
+              <span>Budget total d'acquisition</span>
+              <strong id="budget-result">0 €</strong>
+              <small>Apport et emprunt compris</small>
+            </div>
+
+            <h3>Revenus et endettement</h3>
+
+            <dl class="summary-list">
+              <div>
+                <dt>Revenus nets mensuels du foyer</dt>
+                <dd id="household-net-result">0 €</dd>
+              </div>
+
+              <div>
+                <dt>Capacité mensuelle totale</dt>
+                <dd id="max-debt-result">0 €</dd>
+              </div>
+
+              <div>
+                <dt>Crédits existants</dt>
+                <dd id="existing-loans-result">0 €</dd>
+              </div>
+
+              <div class="summary-emphasis">
+                <dt>Mensualité disponible</dt>
+                <dd id="available-monthly-result">0 €</dd>
+              </div>
+            </dl>
+
+            <h3>Détail du crédit</h3>
+
+            <dl class="summary-list">
+              <div>
+                <dt>Capital empruntable</dt>
+                <dd id="loan-capital-result">0 €</dd>
+              </div>
+
+              <div>
+                <dt>Mensualité hors assurance</dt>
+                <dd id="loan-payment-result">0 €</dd>
+              </div>
+
+              <div>
+                <dt>Assurance mensuelle</dt>
+                <dd id="insurance-payment-result">0 €</dd>
+              </div>
+
+              <div>
+                <dt>Intérêts totaux</dt>
+                <dd id="total-interest-result">0 €</dd>
+              </div>
+
+              <div>
+                <dt>Coût total de l'assurance</dt>
+                <dd id="total-insurance-result">0 €</dd>
+              </div>
+
+              <div class="summary-emphasis">
+                <dt>Coût total du crédit</dt>
+                <dd id="total-credit-cost-result">0 €</dd>
+              </div>
+
+              <div>
+                <dt>Montant total remboursé</dt>
+                <dd id="total-repaid-result">0 €</dd>
+              </div>
+            </dl>
+
+            <h3>Budget immobilier</h3>
+
+            <dl class="summary-list">
+              <div>
+                <dt>Apport personnel</dt>
+                <dd id="down-payment-result">0 €</dd>
+              </div>
+
+              <div>
+                <dt>Frais d'acquisition estimés</dt>
+                <dd id="purchase-fees-result">0 €</dd>
+              </div>
+
+              <div class="summary-emphasis">
+                <dt>Prix maximal du bien</dt>
+                <dd id="property-price-result">0 €</dd>
+              </div>
+            </dl>
+
+            <div id="warning-message"
+                 class="warning-message"
+                 role="status"
+                 hidden>
+            </div>
+
+            <div class="action-buttons">
+              <button type="button"
+                      class="button button-primary"
+                      id="share-button">
+                Copier le lien de simulation
+              </button>
+
+              <button type="button"
+                      class="button button-secondary"
+                      id="reset-button">
+                Réinitialiser
+              </button>
+            </div>
+
+            <p class="action-feedback"
+               id="share-feedback"
+               role="status"
+               aria-live="polite"></p>
+
+          </section>
+
+        </aside>
+
+      </div>
+
+      <!-- MÉTHODOLOGIE -->
+      <section class="methodology panel">
+
+        <h2>Comment fonctionne cette simulation ?</h2>
+
+        <p>
+          Le calcul part des revenus nets mensuels estimés
+          des emprunteurs, avant impôt sur le revenu.
+          Il applique un taux d'endettement maximal,
+          puis déduit les mensualités des crédits existants.
+        </p>
+
+        <p>
+          Le capital empruntable est calculé selon
+          la formule d'un prêt amortissable à taux fixe.
+          Le prix maximal du bien tient compte de l'apport
+          et des frais d'acquisition estimés.
+        </p>
+
+        <p>
+          Cette simulation est indicative et ne constitue
+          ni une offre de prêt ni un accord bancaire.
+          La capacité réelle dépend notamment de la stabilité
+          des revenus, du reste à vivre, des charges,
+          de l'assurance et de la politique de la banque.
+          Le plafond d'endettement de 35 % comporte
+          des possibilités de dérogation encadrées.
+        </p>
+
+        <p>
+          Les taux sont des hypothèses ajustables.
+          Le calcul ne constitue pas un TAEG réglementaire
+          et n'intègre pas automatiquement les frais
+          de dossier, de garantie, les prêts aidés
+          ou les revenus locatifs.
+        </p>
+
+      </section>
+
+    </main>
+
+    <!-- PIED DE PAGE -->
+    <footer class="site-footer">
+      <span>Mon Budget Immo</span>
+      <span>
+        Simulateur indicatif · Données calculées localement
+      </span>
+    </footer>
+
+  </div>
+
+</body>
+</html>
