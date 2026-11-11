@@ -499,6 +499,26 @@
               </p>
             </div>
 
+            <div class="field">
+              <label for="monthly-cap">
+                Mensualité maximale souhaitée
+              </label>
+              <div class="input-with-unit">
+                <input type="number"
+                       id="monthly-cap"
+                       min="0"
+                       max="100000"
+                       step="50"
+                       inputmode="decimal"
+                       placeholder="Capacité maximale automatique">
+                <span>€/mois</span>
+              </div>
+              <p class="help-text" id="monthly-cap-help">
+                Facultatif. Plafonne la mensualité du nouveau prêt,
+                assurance comprise, sans dépasser votre capacité bancaire.
+              </p>
+            </div>
+
           </section>
 
           <!-- ACQUISITION -->
@@ -527,6 +547,11 @@
                        value="50000">
                 <span>€</span>
               </div>
+              <button type="button"
+                      id="match-fees-button"
+                      class="button button-inline">
+                Ajuster l'apport aux frais d'acquisition
+              </button>
             </div>
 
             <fieldset class="field">
@@ -563,6 +588,10 @@
                        step="0.1"
                        value="8">
                 <span>%</span>
+              </div>
+              <div class="inline-result">
+                <span>Montant estimé des frais</span>
+                <strong id="fees-live-result">0 €</strong>
               </div>
             </div>
 
@@ -606,9 +635,13 @@
                 <dt>Crédits existants</dt>
                 <dd id="existing-loans-result">0 €</dd>
               </div>
+              <div>
+                <dt>Capacité bancaire disponible</dt>
+                <dd id="bank-monthly-capacity-result">0 €</dd>
+              </div>
 
               <div class="summary-emphasis">
-                <dt>Mensualité disponible</dt>
+                <dt>Mensualité retenue pour le prêt</dt>
                 <dd id="available-monthly-result">0 €</dd>
               </div>
             </dl>
@@ -643,7 +676,11 @@
 
               <div class="summary-emphasis">
                 <dt>Coût total du crédit</dt>
-                <dd id="total-credit-cost-result">0 €</dd>
+                <dd class="credit-cost-value">
+                  <strong id="total-credit-cost-result">0 €</strong>
+                  <small id="total-credit-cost-percent"
+                         aria-label="Coût total en pourcentage du capital emprunté">0,00 %</small>
+                </dd>
               </div>
 
               <div>
