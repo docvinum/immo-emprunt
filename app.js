@@ -38,6 +38,7 @@
 
     debtRatio: 35,
     existingLoans: 0,
+    monthlyCap: null,
 
     downPayment: 50000,
     propertyType: "old",
@@ -67,6 +68,7 @@
     insuranceRate: [0, 10],
     share: [0, 100],
     existingLoans: [0, 100000],
+    monthlyCap: [0, 100000],
     downPayment: [0, 100000000],
     fees: [0, 30]
   });
@@ -89,6 +91,7 @@
     insurance2Share: "share2",
     debtRatio: "debt",
     existingLoans: "loans",
+    monthlyCap: "monthly",
     downPayment: "apport",
     propertyType: "type",
     purchaseFees: "fees"
@@ -147,6 +150,11 @@
     insuranceEffective: $("insurance-effective"),
 
     existingLoans: $("existing-loans"),
+    monthlyCap: $("monthly-cap"),
+    matchFeesButton: $("match-fees-button"),
+    feesLiveResult: $("fees-live-result"),
+    totalCreditCostPercent: $("total-credit-cost-percent"),
+    bankMonthlyCapacityResult: $("bank-monthly-capacity-result"),
     downPayment: $("down-payment"),
     purchaseFees: $("purchase-fees"),
 
@@ -412,10 +420,16 @@
       config.existingLoans
     );
 
-    const availableMonthly = Math.max(
+    const bankMonthlyCapacity = Math.max(
       0,
       maxDebtMonthly - existingLoans
     );
+
+    // Un plafond volontaire ne peut jamais augmenter
+    // la capacité bancaire disponible.
+    const availableMonthly = config.monthlyCap === null
+      ? bankMonthlyCapacity
+      : Math.min(bankMonthlyCapacity, Math.max(0, config.monthlyCap));
 
     const months = config.duration * 12;
 
@@ -482,6 +496,7 @@
 
       maxDebtMonthly,
       existingLoans,
+      bankMonthlyCapacity,
       availableMonthly,
 
       months,
@@ -569,6 +584,11 @@
     );
 
     setText(
+      elements.bankMonthlyCapacityResult,
+      formatEuro(result.bankMonthlyCapacity)
+    );
+
+    setText(
       elements.loanCapitalResult,
       formatEuro(result.capital)
     );
@@ -599,6 +619,13 @@
     );
 
     setText(
+      elements.totalCreditCostPercent,
+      formatPercent(result.capital > 0
+        ? 100 * result.totalCreditCost / result.capital
+        : 0)
+    );
+
+    setText(
       elements.totalRepaidResult,
       formatEuro(result.totalRepaid)
     );
@@ -610,6 +637,11 @@
 
     setText(
       elements.purchaseFeesResult,
+      formatEuro(result.acquisitionFees)
+    );
+
+    setText(
+      elements.feesLiveResult,
       formatEuro(result.acquisitionFees)
     );
 
@@ -779,6 +811,9 @@
       elements.existingLoans,
       state.existingLoans
     );
+
+    elements.monthlyCap.value =
+      state.monthlyCap === null ? "" : String(state.monthlyCap);
 
     setNumberInput(
       elements.downPayment,
@@ -1010,6 +1045,7 @@
       insurance1Share: LIMITS.share,
       insurance2Share: LIMITS.share,
       existingLoans: LIMITS.existingLoans,
+      monthlyCap: LIMITS.monthlyCap,
       downPayment: LIMITS.downPayment,
       purchaseFees: LIMITS.fees
     };
@@ -1027,7 +1063,8 @@
 
       if (
         (key === "net1Override" ||
-         key === "net2Override") &&
+         key === "net2Override" ||
+         key === "monthlyCap") &&
         raw === ""
       ) {
         result[key] = null;
@@ -1199,7 +1236,27 @@
   }
 
   // ==========================================================
-  // 12. ÉVÉNEMENTS
+  // 12. APPORT COUVRANT LES FRAIS
+  // ==========================================================
+
+  function matchDownPaymentToFees() {
+    const result = calculateSimulation(state);
+    const feesRatio = state.purchaseFees / 100;
+
+    // Si A est l'apport et C le crédit :
+    // A = (C + A) * f / (1 + f), donc A = C * f.
+    // L'arrondi supérieur évite un léger déficit de couverture.
+    state.downPayment = clamp(
+      Math.ceil(result.capital * feesRatio - 1e-9),
+      ...LIMITS.downPayment
+    );
+
+    setNumberInput(elements.downPayment, state.downPayment);
+    update();
+  }
+
+  // ==========================================================
+  // 13. ÉVÉNEMENTS
   // ==========================================================
 
   function bindEvents() {
@@ -1313,6 +1370,17 @@
       elements.existingLoans,
       "existingLoans",
       LIMITS.existingLoans
+    );
+
+    bindNullableNumber(
+      elements.monthlyCap,
+      "monthlyCap",
+      LIMITS.monthlyCap
+    );
+
+    elements.matchFeesButton.addEventListener(
+      "click",
+      matchDownPaymentToFees
     );
 
     bindNumber(
